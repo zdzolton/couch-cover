@@ -1,0 +1,17 @@
+{
+  "name": "CouchMock",
+  "version": "0.0.0",
+  "description": "Provides a mock evironment for testing CouchDB design document functions",
+  "keywords": ["CouchDB", "testing"],
+  "author": {
+    "name": "Zachary Zolton",
+    "email": "zachary.zolton@gmail.com",
+    "url": "http://twitter.com/zdzolton"
+  },
+  "licenses": [
+    { "type": "MIT", "url": "http://www.opensource.org/licenses/mit-license.php", }
+  ],
+  "main": "./main",
+  "dependencies": { "coffee-script": ">=0.9.4" },
+  "engines": { "node": ">= 0.2.4" }
+}

@@ -1,0 +1,4 @@
+CouchMock
+=========
+
+Provides a mock evironment for testing CouchDB design document functions
