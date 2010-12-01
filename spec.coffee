@@ -36,6 +36,10 @@ vows.describe('CouchDB design doc function executor').addBatch({
       causeError = -> executor.compile 'the.foo.bar'
       assert.throws causeError, couchMock.CouchMissingFunctionError
     
+    'should throw error for non-function path': (executor) ->
+      causeError = -> executor.compile 'nonFunction'
+      assert.throws causeError, couchMock.NotAFunctionError
+
     'should be able to pass arguments to function': (executor) ->
       assert.equal 9, executor.call 'the.squared', [3]
   }

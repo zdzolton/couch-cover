@@ -15,9 +15,11 @@ class CouchFunction
     fileName = "#{@ddoc._id}/#{@funPath}.js"
     code = "(#{readPath @funPath, @ddoc});"
     sandBox = createSandbox @ddoc
-    @fun = runInNewContext code, sandBox, fileName
+    try
+      @fun = runInNewContext code, sandBox, fileName
+    catch e
     if typeof @fun isnt 'function'
-      throw "#{fileName} does not evaluate to a function"
+      throw new NotAFunctionError @funPath, @ddoc
   
   call: (funArgs=[]) ->
     @fun.apply null, funArgs
@@ -25,6 +27,10 @@ class CouchFunction
 class exports.CouchMissingFunctionError extends Error
   constructor: (@funPath, @ddoc) ->
     @message = "Function '#{funPath}' not found in design doc '#{@ddoc._id}'"
+
+class exports.NotAFunctionError extends Error
+  constructor: (@funPath, @ddoc) ->
+    @message = "Property path '#{funPath}' in design doc '#{@ddoc._id}' does not evaluate to a function"
 
 readPath = (propPath, obj) ->
   getSubObject = (o, prop) ->
