@@ -33,6 +33,17 @@ vows.describe('CouchDB design doc function executor').addBatch({
         assert.equal 42, theAnswerFun.call()
     }
     
+    'and then compiling a function using sandboxed log function': {
+      topic: (ddoc) -> ddoc.compile 'logging'
+      
+      'should have no log messages yet': (fun) ->
+        assert.isEmpty fun.log
+
+      'should be able to a log message': (fun) ->
+        fun.call()
+        assert.equal 1, fun?.log?.length
+    }
+    
     'should throw error for missing function path': (ddoc) ->
       causeError = -> ddoc.compile 'the.foo.bar'
       assert.throws causeError, couchMock.MissingFunctionError
