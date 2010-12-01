@@ -20,29 +20,29 @@ vows.describe('CouchDB design doc function executor').addBatch({
     topic: -> new couchMock.DesignDoc testDDoc
 
     'and then calling a function': {
-      topic: (executor) -> executor.call 'the.answer'
+      topic: (ddoc) -> ddoc.call 'the.answer'
       
       'should return 42': (retVal) ->
         assert.equal 42, retVal
     }
     
     'and then compiling a function': {
-      topic: (executor) -> executor.compile 'the.answer'
+      topic: (ddoc) -> ddoc.compile 'the.answer'
       
       'should be able to invoke': (theAnswerFun) ->
         assert.equal 42, theAnswerFun.call()
     }
     
-    'should throw error for missing function path': (executor) ->
-      causeError = -> executor.compile 'the.foo.bar'
+    'should throw error for missing function path': (ddoc) ->
+      causeError = -> ddoc.compile 'the.foo.bar'
       assert.throws causeError, couchMock.MissingFunctionError
     
-    'should throw error for non-function path': (executor) ->
-      causeError = -> executor.compile 'nonFunction'
+    'should throw error for non-function path': (ddoc) ->
+      causeError = -> ddoc.compile 'nonFunction'
       assert.throws causeError, couchMock.NotAFunctionError
 
-    'should be able to pass arguments to function': (executor) ->
-      assert.equal 9, executor.call 'the.squared', [3]
+    'should be able to pass arguments to function': (ddoc) ->
+      assert.equal 9, ddoc.call 'the.squared', [3]
   }
     
 }).export module
