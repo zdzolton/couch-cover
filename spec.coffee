@@ -1,5 +1,6 @@
 vows = require 'vows'
 assert = require 'assert'
+{puts, inspect} = require 'sys'
 
 couchMock = require './main'
 
@@ -34,7 +35,7 @@ vows.describe('CouchDB design doc function executor').addBatch({
     
     'should throw error for missing function path': (executor) ->
       causeError = -> executor.compile 'the.foo.bar'
-      assert.throws causeError, couchMock.CouchMissingFunctionError
+      assert.throws causeError, couchMock.MissingFunctionError
     
     'should throw error for non-function path': (executor) ->
       causeError = -> executor.compile 'nonFunction'
@@ -44,8 +45,4 @@ vows.describe('CouchDB design doc function executor').addBatch({
       assert.equal 9, executor.call 'the.squared', [3]
   }
     
-  # 'should log string': ->
-  #   fun = compile 'logging.string', testDDoc
-  #   assert.doesNotThrow fun, Error
-  
 }).export module
