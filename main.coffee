@@ -12,16 +12,15 @@ class exports.DesignDoc
 
 class CouchFunction
   constructor: (@ddoc, @funPath) ->
-    @fileName = "#{@ddoc._id}/#{@funPath}.js"
-    @code = "(#{readPath @funPath, @ddoc});"
-    @sandBox = createSandbox @ddoc
+    fileName = "#{@ddoc._id}/#{@funPath}.js"
+    code = "(#{readPath @funPath, @ddoc});"
+    sandBox = createSandbox @ddoc
+    @fun = runInNewContext code, sandBox, fileName
+    if typeof @fun isnt 'function'
+      throw "#{fileName} does not evaluate to a function"
   
   call: (funArgs=[]) ->
-    fun = runInNewContext @code, @sandBox, @fileName
-    if typeof fun isnt 'function'
-      throw "#{@fileName} does not evaluate to a function"
-    else
-      fun.apply null, funArgs
+    @fun.apply null, funArgs
 
 class exports.CouchMissingFunctionError extends Error
   constructor: (@funPath, @ddoc) ->
