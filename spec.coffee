@@ -42,6 +42,8 @@ vows.describe('CouchDB design doc function executor').addBatch({
       'should be able to a log message': (fun) ->
         fun.call()
         assert.equal 1, fun?.log?.length
+        fun.call(); fun.call()
+        assert.equal 3, fun?.log?.length
     }
     
     'should throw error for missing function path': (ddoc) ->
