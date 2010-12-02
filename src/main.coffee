@@ -36,8 +36,7 @@ createSandbox = (couchFun) ->
     log: (msg) -> couchFun.log.push msg
     require: makeRequireFun makeInitialRefStack couchFun
   }
-  for name, fun of couchFun.overrides
-    sb[name] = fun
+  sb[name] = fun for name, fun of couchFun.overrides
   sb
 
 makeInitialRefStack = (couchFun) ->
