@@ -36,6 +36,7 @@ readPath = (propPath, obj) ->
 createSandbox = (couchFun) ->
   {
     log: (msg) -> couchFun.log.push msg
+    require: (moduleID) -> { foo: -> 'foo via lib!' }
   }
 
 class exports.MissingFunctionError extends Error
