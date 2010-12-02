@@ -1,6 +1,7 @@
 vows = require 'vows'
 assert = require 'assert'
 {puts, inspect} = require 'sys'
+p = (o) -> puts inspect o
 
 couchMock = require './main'
 
@@ -12,6 +13,12 @@ testDDoc = {
   }
   logging: 'function() { log("testing"); }'
   nonFunction: 'sorry!'
+  requireTest: 'function() { return require("lib").foo(); }'
+  lib: '''
+    exports.foo = function() {
+      return 'foo via lib!';
+    }
+  '''
 }
 
 vows.describe('CouchDB design doc function executor').addBatch({
@@ -46,6 +53,17 @@ vows.describe('CouchDB design doc function executor').addBatch({
         assert.equal 3, fun?.log?.length
     }
     
+    'and then compiling a function using sandboxed require function': {
+      topic: (ddoc) -> ddoc.compile 'requireTest'
+      
+      'and then calling it': {
+        topic: (fun, ddoc) -> fun.call()
+        
+        'should have returned a value from the required library': (retVal) ->
+          assert.equal 'foo via lib!', retVal
+      }
+    }
+    
     'should throw error for missing function path': (ddoc) ->
       causeError = -> ddoc.compile 'the.foo.bar'
       assert.throws causeError, couchMock.MissingFunctionError
@@ -58,4 +76,4 @@ vows.describe('CouchDB design doc function executor').addBatch({
       assert.equal 9, ddoc.call 'the.squared', [3]
   }
     
-}).export module
+}).run() #export module
