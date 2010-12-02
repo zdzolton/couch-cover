@@ -14,14 +14,25 @@ testDDoc = {
   logging: 'function() { log("testing"); }'
   nonFunction: 'sorry!'
   requireTest: 'function(s) { return require("lib/simple").foo(s); }'
-  deeply: { nested: {
-    requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
-  } }
+  deeply: { 
+    nested: {
+      requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
+    
+    }
+    nestedRequireTest: 'function() { return require("../lib/alsoRequires").bar(); }'
+  }
   lib: {
     simple: '''
       exports.foo = function(s) {
         return 'foo ' + s + '!';
-      }
+      };
+    '''
+    
+    alsoRequires: '''
+      var simple = require('simple');
+      exports.bar = function() {
+        return simple.foo('bar??')
+      };
     '''
   }
 }
@@ -70,6 +81,13 @@ vows.describe('CouchDB design doc function executor').addBatch({
       
       'should have returned a value from the required library': (retVal) ->
         assert.equal 'foo DEEP?!', retVal
+    }
+    
+    'and then calling a function with nested requires': {
+      topic: (ddoc) -> ddoc.compile('deeply.nestedRequireTest').call()
+      
+      'should have returned a value from the required library': (retVal) ->
+        assert.equal 'foo bar??!', retVal
     }
     
     'should throw error for missing function path': (ddoc) ->
