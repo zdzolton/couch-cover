@@ -37,10 +37,13 @@ createSandbox = (couchFun) ->
   {
     log: (msg) -> couchFun.log.push msg
     require: (moduleID) ->
-      code = readPath moduleID, couchFun.ddoc
-      # puts "code: #{code}"
-      sandbox = { exports: {} }
-      runInNewContext code, sandbox, couchFun.fileName
+      try
+        code = readPath moduleID, couchFun.ddoc
+        # puts "code: #{code}"
+        sandbox = { exports: {} }
+        runInNewContext code, sandbox, couchFun.fileName
+      catch e
+        puts e.message
       sandbox.exports
   }
 

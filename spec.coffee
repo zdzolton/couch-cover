@@ -13,12 +13,14 @@ testDDoc = {
   }
   logging: 'function() { log("testing"); }'
   nonFunction: 'sorry!'
-  requireTest: 'function(s) { return require("lib").foo(s); }'
-  lib: '''
-    exports.foo = function(s) {
-      return 'foo ' + s + '!';
-    }
-  '''
+  requireTest: 'function(s) { return require("lib/simple").foo(s); }'
+  lib: {
+    simple: '''
+      exports.foo = function(s) {
+        return 'foo ' + s + '!';
+      }
+    '''
+  }
 }
 
 vows.describe('CouchDB design doc function executor').addBatch({
