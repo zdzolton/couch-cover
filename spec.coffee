@@ -66,7 +66,7 @@ vows.describe('CouchDB design doc function executor').addBatch({
     
     'should throw error for missing function path': (ddoc) ->
       causeError = -> ddoc.compile 'the.foo.bar'
-      assert.throws causeError, couchMock.MissingFunctionError
+      assert.throws causeError, couchMock.MissingPropPathError
     
     'should throw error for non-function path': (ddoc) ->
       causeError = -> ddoc.compile 'nonFunction'

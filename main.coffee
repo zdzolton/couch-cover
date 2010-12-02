@@ -30,7 +30,7 @@ readPath = (propPath, obj) ->
     if typeof o is 'object' and prop of o
       o[prop]
     else
-      throw new MissingFunctionError propPath, obj
+      throw new MissingPropPathError propPath, obj
   propPath.split('.').reduce getSubObject, obj
 
 createSandbox = (couchFun) ->
@@ -39,9 +39,9 @@ createSandbox = (couchFun) ->
     require: (moduleID) -> { foo: -> 'foo via lib!' }
   }
 
-class exports.MissingFunctionError extends Error
+class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->
-    @message = "Function '#{funPath}' not found in design doc '#{@ddoc._id}'"
+    @message = "Property path '#{funPath}' not found in design doc '#{@ddoc._id}'"
 
 class exports.NotAFunctionError extends Error
   constructor: (@funPath, @ddoc) ->
