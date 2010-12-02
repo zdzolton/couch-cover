@@ -4,11 +4,9 @@
 class exports.DesignDoc
   constructor: (@ddoc) ->
   
-  compile: (funPath) ->
-    new CouchFunction @ddoc, funPath
+  compile: (funPath) -> new CouchFunction @ddoc, funPath
   
-  call: (funPath, funArgs=[]) ->
-    @compile(funPath).call funArgs...
+  call: (funPath, funArgs=[]) -> @compile(funPath).call funArgs...
 
 class CouchFunction
   constructor: (@ddoc, @funPath) ->
@@ -22,10 +20,9 @@ class CouchFunction
     if typeof @fun isnt 'function'
       throw new NotAFunctionError @funPath, @ddoc
   
-  call: (funArgs...) ->
-    @fun.apply null, funArgs
+  call: (funArgs...) -> @fun.apply null, funArgs
 
-readPath = (propPath, obj) ->
+readPath = (propPath, obj) -> 
   getSubObject = (o, prop) ->
     if typeof o is 'object' and prop of o
       o[prop]
@@ -36,17 +33,39 @@ readPath = (propPath, obj) ->
 createSandbox = (couchFun) ->
   {
     log: (msg) -> couchFun.log.push msg
-    require: (moduleID) ->
-      try
-        propPath = moduleID.replace '/', '.'
-        code = readPath propPath, couchFun.ddoc
-        # puts "code: #{code}"
-        sandbox = { exports: {} }
-        runInNewContext code, sandbox, couchFun.fileName
-      catch e
-        puts e.message
-      sandbox.exports
+    require: makeRequireFun makeInitialRefStack couchFun
   }
+
+makeInitialRefStack = (couchFun) ->
+  stack = [couchFun.ddoc]
+  couchFun.funPath.split('.').forEach (prop) ->
+    currObj = stack[stack.length - 1]
+    stack.push currObj[prop]
+  stack.pop()
+  stack
+
+makeRequireFun = (refStack) ->
+  (moduleID) ->
+    sandbox = { exports: {} }
+    try
+      [nextRefStack, code] = findModule moduleID, refStack
+      sandbox.require = makeRequireFun nextRefStack
+      runInNewContext code, sandbox, moduleID
+    catch e
+      puts "Design doc require() error: #{e.message}"
+    sandbox.exports
+
+findModule = (moduleID, refStack) ->
+  for part in moduleID.split '/'
+    if part is '..'
+      refStack.pop()
+    else if part isnt '.'
+      current = refStack[refStack.length - 1]
+      next =  current[part]
+      throw "Couldn't find part: #{part}" moduleID unless next?
+      refStack.push next
+  code = refStack.pop()
+  [refStack, code]
 
 class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->

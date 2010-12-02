@@ -14,6 +14,9 @@ testDDoc = {
   logging: 'function() { log("testing"); }'
   nonFunction: 'sorry!'
   requireTest: 'function(s) { return require("lib/simple").foo(s); }'
+  deeply: { nested: {
+    requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
+  } }
   lib: {
     simple: '''
       exports.foo = function(s) {
@@ -55,14 +58,28 @@ vows.describe('CouchDB design doc function executor').addBatch({
         assert.equal 3, fun?.log?.length
     }
     
+    # Next, let's try to just use ddoc.call 'requireTest', ['GOTYA']
     'and then compiling a function using sandboxed require function': {
       topic: (ddoc) -> ddoc.compile 'requireTest'
       
       'and then calling it': {
-        topic: (fun, ddoc) -> fun.call('GOTYA')
+        topic: (fun, ddoc) -> fun.call 'GOTYA'
         
         'should have returned a value from the required library': (retVal) ->
           assert.equal 'foo GOTYA!', retVal
+      }
+    }
+    
+    # Also, check that some other function can't get at foo()...
+    
+    'and then compiling a function requiring a module higher in hierarchy': {
+      topic: (ddoc) -> ddoc.compile 'deeply.nested.requireTest'
+      
+      'and then calling it': {
+        topic: (fun, ddoc) -> fun.call()
+        
+        'should have returned a value from the required library': (retVal) ->
+          assert.equal 'foo DEEP?!', retVal
       }
     }
     
