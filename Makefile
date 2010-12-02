@@ -4,3 +4,6 @@ build: clean
 clean:
 	rm -rf ./lib
 	mkdir lib
+
+test: build
+	vows
