@@ -13,11 +13,11 @@ class exports.DesignDoc
 class CouchFunction
   constructor: (@ddoc, @funPath) ->
     @log = []
-    fileName = "#{@ddoc._id}/#{@funPath}.js"
+    @fileName = "#{@ddoc._id}/#{@funPath}.js"
     code = "(#{readPath @funPath, @ddoc});"
     sandbox = createSandbox @
     try
-      @fun = runInNewContext code, sandbox, fileName
+      @fun = runInNewContext code, sandbox, @fileName
     catch e
     if typeof @fun isnt 'function'
       throw new NotAFunctionError @funPath, @ddoc
@@ -36,7 +36,12 @@ readPath = (propPath, obj) ->
 createSandbox = (couchFun) ->
   {
     log: (msg) -> couchFun.log.push msg
-    require: (moduleID) -> { foo: -> 'foo via lib!' }
+    require: (moduleID) ->
+      code = readPath moduleID, couchFun.ddoc
+      # puts "code: #{code}"
+      sandbox = { exports: {} }
+      runInNewContext code, sandbox, couchFun.fileName
+      sandbox.exports
   }
 
 class exports.MissingPropPathError extends Error
