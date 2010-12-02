@@ -13,10 +13,10 @@ testDDoc = {
   }
   logging: 'function() { log("testing"); }'
   nonFunction: 'sorry!'
-  requireTest: 'function() { return require("lib").foo(); }'
+  requireTest: 'function(s) { return require("lib").foo(s); }'
   lib: '''
-    exports.foo = function() {
-      return 'foo via lib!';
+    exports.foo = function(s) {
+      return 'foo ' + s + '!';
     }
   '''
 }
