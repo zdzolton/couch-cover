@@ -5,7 +5,7 @@
   "keywords": ["CouchDB", "testing"],
   "author": "Zachary Zolton <zachary.zolton@gmail.com>",
   "licenses": [{"type": "MIT"}],
-  "main": "./main",
+  "main": "./lib/main",
   "engines": { "node": ">= 0.2.4", "coffee-script": ">=0.9.4" },
   "repositories": [
     { "type": "git", "url": "https://github.com/zdzolton/couch-mock.git" }
