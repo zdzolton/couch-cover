@@ -1,5 +1,5 @@
-CouchMock
-=========
+CouchCover
+==========
 
 A mock environment for using Node.js to test CouchDB design document functions.
 
@@ -7,11 +7,11 @@ Usage
 =====
 
     # Forgive the Coffee-colored syntax...
-    couchMock = require 'CouchMock'
+    CouchCover = require 'CouchCover'
     assert = require 'assert'
     
     # Let's load up the design doc!
-    ddoc = new couchMock.DesignDoc {
+    ddoc = new CouchCover.DesignDoc {
       foo: '''
         function(s) {
           return "From foo: " + s "!";

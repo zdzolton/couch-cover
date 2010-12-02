@@ -1,11 +1,11 @@
 vows = require 'vows'
 assert = require 'assert'
-couchMock = require '../src/main'
+CouchCover = require '../src/main'
 
 vows.describe('CouchDB design doc function executor').addBatch({
   
   'after loading a very contrived design doc': {
-    topic: -> new couchMock.DesignDoc contrivedDDoc
+    topic: -> new CouchCover.DesignDoc contrivedDDoc
 
     'and then calling a function': {
       topic: (ddoc) -> ddoc.call 'the.answer'
