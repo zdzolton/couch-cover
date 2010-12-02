@@ -17,7 +17,7 @@ class CouchFunction
     try
       @fun = runInNewContext code, sandbox, @fileName
     catch e
-    if typeof @fun isnt 'function'
+    unless typeof @fun is 'function'
       throw new NotAFunctionError @funPath, @ddoc
   
   call: (funArgs...) -> @fun.apply null, funArgs
