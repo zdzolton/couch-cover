@@ -1,46 +1,11 @@
 vows = require 'vows'
 assert = require 'assert'
-{puts, inspect} = require 'sys'
-p = (o) -> puts inspect o
-
 couchMock = require './main'
-
-testDDoc = {
-  _id: '_design/testing'
-  the: {
-    answer: 'function() { return 34 + 8; }'
-    squared: 'function(n) { return n * n; }'
-  }
-  logging: 'function() { log("testing"); }'
-  nonFunction: 'sorry!'
-  requireTest: 'function(s) { return require("lib/simple").foo(s); }'
-  deeply: { 
-    nested: {
-      requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
-    
-    }
-    nestedRequireTest: 'function() { return require("../lib/alsoRequires").bar(); }'
-  }
-  lib: {
-    simple: '''
-      exports.foo = function(s) {
-        return 'foo ' + s + '!';
-      };
-    '''
-    
-    alsoRequires: '''
-      var simple = require('simple');
-      exports.bar = function() {
-        return simple.foo('bar??')
-      };
-    '''
-  }
-}
 
 vows.describe('CouchDB design doc function executor').addBatch({
   
-  'after loading the design doc': {
-    topic: -> new couchMock.DesignDoc testDDoc
+  'after loading a very contrived design doc': {
+    topic: -> new couchMock.DesignDoc contrivedDDoc
 
     'and then calling a function': {
       topic: (ddoc) -> ddoc.call 'the.answer'
@@ -102,4 +67,34 @@ vows.describe('CouchDB design doc function executor').addBatch({
       assert.equal 9, ddoc.call 'the.squared', [3]
   }
     
-}).run() #export module
+}).run() # Call `export(module)` here instead of run() for multiple spec files
+
+contrivedDDoc = {
+  _id: '_design/testing'
+  the: {
+    answer: 'function() { return 34 + 8; }'
+    squared: 'function(n) { return n * n; }'
+  }
+  logging: 'function() { log("testing"); }'
+  nonFunction: 'sorry!'
+  requireTest: 'function(s) { return require("lib/simple").foo(s); }'
+  deeply: { 
+    nested: {
+      requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
+    }
+    nestedRequireTest: 'function() { return require("../lib/alsoRequires").bar(); }'
+  }
+  lib: {
+    simple: '''
+      exports.foo = function(s) {
+        return 'foo ' + s + '!';
+      };
+    '''
+    alsoRequires: '''
+      var simple = require('simple');
+      exports.bar = function() {
+        return simple.foo('bar??')
+      };
+    '''
+  }
+}
