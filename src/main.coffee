@@ -4,12 +4,13 @@
 class exports.DesignDoc
   constructor: (@ddoc) ->
   
-  compile: (funPath) -> new CouchFunction @ddoc, funPath
+  compile: (funPath, overrides={}) ->
+    new CouchFunction @ddoc, funPath, overrides
   
   call: (funPath, funArgs=[]) -> @compile(funPath).call funArgs...
 
 class CouchFunction
-  constructor: (@ddoc, @funPath) ->
+  constructor: (@ddoc, @funPath, @overrides={}) ->
     @log = []
     @fileName = "#{@ddoc._id}/#{@funPath}.js"
     code = "(#{readPath @funPath, @ddoc});"
@@ -31,10 +32,13 @@ readPath = (propPath, obj) ->
   propPath.split('.').reduce getSubObject, obj
 
 createSandbox = (couchFun) ->
-  {
+  sb = {
     log: (msg) -> couchFun.log.push msg
     require: makeRequireFun makeInitialRefStack couchFun
   }
+  for name, fun of couchFun.overrides
+    sb[name] = fun
+  sb
 
 makeInitialRefStack = (couchFun) ->
   stack = [couchFun.ddoc]

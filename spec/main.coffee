@@ -65,9 +65,22 @@ vows.describe('CouchDB design doc function executor').addBatch({
 
     'should be able to pass arguments to function': (ddoc) ->
       assert.equal 9, ddoc.call 'the.squared', [3]
+      
+    'and then compiling and calling a function using sandbox overrides': {
+      topic: (ddoc) ->
+        logWasCalled = false
+        fun = ddoc.compile 'logging', {
+          log: (s) -> logWasCalled = "ok: #{s}"
+        }
+        fun.call()
+        logWasCalled
+        
+      'should have called overridden log() function': (logWasCalled) ->
+        assert.equal logWasCalled, "ok: testing"
+    }
   }
     
-}).export(module)
+}).export module
 
 contrivedDDoc = {
   _id: '_design/testing'
