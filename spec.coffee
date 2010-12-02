@@ -57,10 +57,10 @@ vows.describe('CouchDB design doc function executor').addBatch({
       topic: (ddoc) -> ddoc.compile 'requireTest'
       
       'and then calling it': {
-        topic: (fun, ddoc) -> fun.call()
+        topic: (fun, ddoc) -> fun.call('GOTYA')
         
         'should have returned a value from the required library': (retVal) ->
-          assert.equal 'foo via lib!', retVal
+          assert.equal 'foo GOTYA!', retVal
       }
     }
     
