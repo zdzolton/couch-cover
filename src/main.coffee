@@ -52,7 +52,7 @@ makeRequireFun = (refStack) ->
       sandbox.require = makeRequireFun nextRefStack
       runInNewContext code, sandbox, moduleID
     catch e
-      puts "Design doc require() error: #{e.message}"
+      throw "Design doc require() error: #{e.message}"
     sandbox.exports
 
 findModule = (moduleID, refStack) ->
