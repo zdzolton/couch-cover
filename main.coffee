@@ -38,7 +38,8 @@ createSandbox = (couchFun) ->
     log: (msg) -> couchFun.log.push msg
     require: (moduleID) ->
       try
-        code = readPath moduleID, couchFun.ddoc
+        propPath = moduleID.replace '/', '.'
+        code = readPath propPath, couchFun.ddoc
         # puts "code: #{code}"
         sandbox = { exports: {} }
         runInNewContext code, sandbox, couchFun.fileName
