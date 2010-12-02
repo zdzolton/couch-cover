@@ -1,6 +1,6 @@
 {
   "name": "CouchCover",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Provides a mock evironment for testing CouchDB design document functions",
   "keywords": ["CouchDB", "mock", "testing"],
   "author": "Zachary Zolton <zachary.zolton@gmail.com>",
