@@ -58,29 +58,18 @@ vows.describe('CouchDB design doc function executor').addBatch({
         assert.equal 3, fun?.log?.length
     }
     
-    # Next, let's try to just use ddoc.call 'requireTest', ['GOTYA']
-    'and then compiling a function using sandboxed require function': {
-      topic: (ddoc) -> ddoc.compile 'requireTest'
+    'and then calling a function using sandboxed require function': {
+      topic: (ddoc) -> ddoc.compile('requireTest').call 'GOTYA'
       
-      'and then calling it': {
-        topic: (fun, ddoc) -> fun.call 'GOTYA'
-        
-        'should have returned a value from the required library': (retVal) ->
-          assert.equal 'foo GOTYA!', retVal
-      }
+      'should have returned a value from the required library': (retVal) ->
+        assert.equal 'foo GOTYA!', retVal
     }
     
-    # Also, check that some other function can't get at foo()...
-    
-    'and then compiling a function requiring a module higher in hierarchy': {
-      topic: (ddoc) -> ddoc.compile 'deeply.nested.requireTest'
+    'and then calling a function requiring a module higher in hierarchy': {
+      topic: (ddoc) -> ddoc.compile('deeply.nested.requireTest').call()
       
-      'and then calling it': {
-        topic: (fun, ddoc) -> fun.call()
-        
-        'should have returned a value from the required library': (retVal) ->
-          assert.equal 'foo DEEP?!', retVal
-      }
+      'should have returned a value from the required library': (retVal) ->
+        assert.equal 'foo DEEP?!', retVal
     }
     
     'should throw error for missing function path': (ddoc) ->
