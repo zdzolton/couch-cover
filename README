@@ -1,4 +1,46 @@
 CouchMock
 =========
 
-Provides a mock environment for testing CouchDB design document functions
+A mock environment for using Node.js to test CouchDB design document functions.
+
+Usage
+=====
+
+    # Forgive the Coffee-colored syntax...
+    couchMock = require 'CouchMock'
+    assert = require 'assert'
+    
+    # Let's load up the design doc!
+    ddoc = new couchMock.DesignDoc {
+      foo: '''
+        function(s) {
+          return "From foo: " + s "!";
+        }
+      '''
+    }
+      
+    # Now, let's call function 'foo' with argument 'bar':
+    retVal = ddoc.call 'foo', ['bar']
+    
+    # And note the return value
+    assert.equal 'From foo: bar!', retVal
+    
+    # You can also get a reference, and call that:
+    fooFun = ddoc.compile 'foo'
+    retVal = fooFun.call 'bar'
+    
+    # And note the return value
+    assert.equal 'From foo: bar!', retVal
+
+Dependencies
+============
+
+There are currently no run-time dependencies, but you do need CoffeeScript to hack this package.
+
+TODOs
+=====
+
+* Show usage of require() and log() functions from ddoc code
+* CouchFunction subtypes for View, List, Show, Update and Filter functions
+* Sandbox overrides
+* API documentation 
