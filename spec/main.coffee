@@ -1,6 +1,6 @@
 vows = require 'vows'
 assert = require 'assert'
-couchMock = require './main'
+couchMock = require '../src/main'
 
 vows.describe('CouchDB design doc function executor').addBatch({
   
@@ -67,7 +67,7 @@ vows.describe('CouchDB design doc function executor').addBatch({
       assert.equal 9, ddoc.call 'the.squared', [3]
   }
     
-}).run() # Call `export(module)` here instead of run() for multiple spec files
+}).export(module)
 
 contrivedDDoc = {
   _id: '_design/testing'
