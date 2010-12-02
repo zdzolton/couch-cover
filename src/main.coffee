@@ -7,7 +7,8 @@ class exports.DesignDoc
   compile: (funPath, overrides={}) ->
     new CouchFunction @ddoc, funPath, overrides
   
-  call: (funPath, funArgs=[]) -> @compile(funPath).call funArgs...
+  call: (funPath, funArgs=[], overrides={}) ->
+    @compile(funPath, overrides).call funArgs...
 
 class CouchFunction
   constructor: (@ddoc, @funPath, @overrides={}) ->

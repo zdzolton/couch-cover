@@ -78,6 +78,18 @@ vows.describe('CouchDB design doc function executor').addBatch({
       'should have called overridden log() function': (logWasCalled) ->
         assert.equal logWasCalled, "ok: testing"
     }
+    
+    'should be able to compile/call, with overrides, in one go': {
+       topic: (ddoc) ->
+         logWasCalled = false
+         ddoc.call 'logging', [], {
+           log: (s) -> logWasCalled = "ok: #{s}"
+         }
+         logWasCalled
+
+       'should have called overridden log() function': (logWasCalled) ->
+         assert.equal logWasCalled, "ok: testing"
+    }
   }
     
 }).export module
