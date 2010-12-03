@@ -8,6 +8,11 @@ fixtureDDocs = require '../fixture/ddocs'
 assertReturn = (expected) ->
   (retVal) -> assert.equal retVal, expected
 
+assertCompilingThrows = (funPath, errorType) ->
+  (ddoc) ->
+    causeError = -> ddoc.compile funPath
+    assert.throws causeError, errorType
+
 vows.describe('CouchDB design doc function executor').addBatch({
   
   'after loading a very contrived design doc': {
@@ -15,7 +20,7 @@ vows.describe('CouchDB design doc function executor').addBatch({
 
     'and then calling a function': {
       topic: (ddoc) -> ddoc.call 'the.answer'
-      
+
       'should return 42': assertReturn 42
     }
     
@@ -60,13 +65,11 @@ vows.describe('CouchDB design doc function executor').addBatch({
         assertReturn 'foo bar??!'
     }
     
-    'should throw error for missing function path': (ddoc) ->
-      causeError = -> ddoc.compile 'the.foo.bar'
-      assert.throws causeError, CouchCover.MissingPropPathError
+    'should throw error for missing function path':
+      assertCompilingThrows 'the.foo.bar', CouchCover.MissingPropPathError
     
-    'should throw error for non-function path': (ddoc) ->
-      causeError = -> ddoc.compile 'nonFunction'
-      assert.throws causeError, CouchCover.NotAFunctionError
+    'should throw error for non-function path': 
+      assertCompilingThrows 'nonFunction', CouchCover.NotAFunctionError
 
     'should be able to pass arguments to function': (ddoc) ->
       retVal = ddoc.call 'the.squared', [3]
