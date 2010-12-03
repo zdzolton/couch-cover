@@ -36,10 +36,9 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     
     'compile a function using sandboxed log()': {
       topic: (ddoc) -> ddoc.compile 'logging'
-      
-      'should have no log messages': (fun) -> assert.isEmpty fun.log
 
       'calling should log messages': (fun) ->
+        assert.isEmpty fun.log
         fun.call()
         assert.equal fun?.log?.length, 1
         fun.call(); fun.call()
