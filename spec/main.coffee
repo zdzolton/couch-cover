@@ -1,11 +1,14 @@
+{puts, inspect} = require 'sys'
 vows = require 'vows'
 assert = require 'assert'
+
 CouchCover = require '../src/main'
+fixtureDDocs = require '../fixture/ddocs'
 
 vows.describe('CouchDB design doc function executor').addBatch({
   
   'after loading a very contrived design doc': {
-    topic: -> new CouchCover.DesignDoc contrivedDDoc
+    topic: -> new CouchCover.DesignDoc fixtureDDocs.contrivedDDoc
 
     'and then calling a function': {
       topic: (ddoc) -> ddoc.call 'the.answer'
@@ -94,32 +97,3 @@ vows.describe('CouchDB design doc function executor').addBatch({
     
 }).export module
 
-contrivedDDoc = {
-  _id: '_design/testing'
-  the: {
-    answer: 'function() { return 34 + 8; }'
-    squared: 'function(n) { return n * n; }'
-  }
-  logging: 'function() { log("testing"); }'
-  nonFunction: 'sorry!'
-  requireTest: 'function(s) { return require("lib/simple").foo(s); }'
-  deeply: { 
-    nested: {
-      requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
-    }
-    nestedRequireTest: 'function() { return require("../lib/alsoRequires").bar(); }'
-  }
-  lib: {
-    simple: '''
-      exports.foo = function(s) {
-        return 'foo ' + s + '!';
-      };
-    '''
-    alsoRequires: '''
-      var simple = require('simple');
-      exports.bar = function() {
-        return simple.foo('bar??')
-      };
-    '''
-  }
-}
