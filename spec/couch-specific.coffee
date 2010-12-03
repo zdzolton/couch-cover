@@ -5,6 +5,12 @@ assert = require 'assert'
 CouchCover = require '../src/main'
 fixtureDDocs = require '../fixture/ddocs'
 
+assertEmittedKVCount = (count) ->
+  (result) -> assert.equal result.emitted.length, count
+
+assertEmittedKey = (key) ->
+  (result) -> result.emitted.some (kv) -> kv.key is key
+
 vows.describe('CouchCover.DesignDoc').addBatch({
 
   'load CouchDB function design doc': {
@@ -16,11 +22,8 @@ vows.describe('CouchCover.DesignDoc').addBatch({
         last_name: 'Wells'
       }
 
-      'should emit one key-value pair': (result) ->
-        assert.equal result.emitted.length, 1
-
-      'should emit key "Wells"': (result) ->
-        assert.equal result.emitted[0].key, 'Wells'
+      'should emit one key-value pair': assertEmittedKVCount 1
+      'should emit key "Wells"': assertEmittedKey 'Wells'
     }
 
     'execute view map function "by-tags"': {
@@ -28,14 +31,9 @@ vows.describe('CouchCover.DesignDoc').addBatch({
         tags: ['rainbows', 'unicorns']
       }
 
-      'should emit two key-value pairs': (result) ->
-        assert.equal result.emitted.length, 2
-
-      'should emit key "rainbows"': (result) ->
-        assert.equal result.emitted[0].key, 'rainbows'
-
-      'should emit key "unicorns"': (result) ->
-        assert.equal result.emitted[1].key, 'unicorns'
+      'should emit two key-value pairs': assertEmittedKVCount 2
+      'should emit key "rainbows"': assertEmittedKey 'rainbows'
+      'should emit key "unicorns"': assertEmittedKey 'unicorns'
     }
   }
 
