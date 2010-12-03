@@ -95,6 +95,20 @@ vows.describe('CouchCover.DesignDoc').addBatch({
          assert.equal logWasCalled, "ok: testing"
     }
   }
+  
+  'load CouchDB function design doc': {
+    topic: -> new CouchCover.DesignDoc fixtureDDocs.couchDBFuns
+    
+    'execute view map function': {
+      topic: (ddoc) -> ddoc.viewMap 'by-last-name', { 
+        first_name: 'Orson'
+        last_name: 'Wells'
+      }
+      
+      'should have emitted key "Wells"': (result) ->
+        assert.equal result.emitted.length, 1
+        assert.equal result.emitted[0].key, 'Wells'
+    }
+  }
     
 }).export module
-

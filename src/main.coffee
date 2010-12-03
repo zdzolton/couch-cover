@@ -9,6 +9,11 @@ class exports.DesignDoc
   
   call: (funPath, funArgs=[], overrides={}) ->
     @compile(funPath, overrides).call funArgs...
+  
+  viewMap: (viewName, doc) ->
+    fun = new ViewMapFunction @ddoc, viewName
+    retVal = fun.call doc
+    { returned: retVal, emitted: fun.emitted }
 
 class CouchFunction
   constructor: (@ddoc, @funPath, @overrides={}) ->
@@ -23,6 +28,13 @@ class CouchFunction
       throw new NotAFunctionError @funPath, @ddoc
   
   call: (funArgs...) -> @fun.apply null, funArgs
+
+class ViewMapFunction extends CouchFunction
+  constructor: (@ddoc, @viewName) ->
+    @emitted = emitted = []
+    super @ddoc, "views.#{viewName}.map", {
+      emit: (k, v) -> emitted.push { key: k, value: v }
+    }
 
 readPath = (propPath, obj) -> 
   getSubObject = (o, prop) ->

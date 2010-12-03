@@ -31,3 +31,11 @@ exports.basics = {
     '''
   }
 }
+
+exports.couchDBFuns = {
+  views: {
+    'by-last-name': {
+      map: 'function(doc) { emit(doc.last_name, null); }'
+    }
+  }
+}
