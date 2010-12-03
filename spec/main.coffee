@@ -8,7 +8,7 @@ fixtureDDocs = require '../fixture/ddocs'
 vows.describe('CouchDB design doc function executor').addBatch({
   
   'after loading a very contrived design doc': {
-    topic: -> new CouchCover.DesignDoc fixtureDDocs.contrivedDDoc
+    topic: -> new CouchCover.DesignDoc fixtureDDocs.basics
 
     'and then calling a function': {
       topic: (ddoc) -> ddoc.call 'the.answer'
