@@ -14,14 +14,14 @@ vows.describe('CouchDB design doc function executor').addBatch({
       topic: (ddoc) -> ddoc.call 'the.answer'
       
       'should return 42': (retVal) ->
-        assert.equal 42, retVal
+        assert.equal retVal, 42
     }
     
     'and then compiling a function': {
       topic: (ddoc) -> ddoc.compile 'the.answer'
       
       'should be able to invoke': (theAnswerFun) ->
-        assert.equal 42, theAnswerFun.call()
+        assert.equal theAnswerFun.call(), 42
     }
     
     'and then compiling a function using sandboxed log function': {
@@ -32,30 +32,30 @@ vows.describe('CouchDB design doc function executor').addBatch({
 
       'should be able to a log message': (fun) ->
         fun.call()
-        assert.equal 1, fun?.log?.length
+        assert.equal fun?.log?.length, 1
         fun.call(); fun.call()
-        assert.equal 3, fun?.log?.length
+        assert.equal fun?.log?.length, 3
     }
     
     'and then calling a function using sandboxed require function': {
       topic: (ddoc) -> ddoc.compile('requireTest').call 'GOTYA'
       
       'should have returned a value from the required library': (retVal) ->
-        assert.equal 'foo GOTYA!', retVal
+        assert.equal retVal, 'foo GOTYA!'
     }
     
     'and then calling a function requiring a module higher in hierarchy': {
       topic: (ddoc) -> ddoc.compile('deeply.nested.requireTest').call()
       
       'should have returned a value from the required library': (retVal) ->
-        assert.equal 'foo DEEP?!', retVal
+        assert.equal retVal, 'foo DEEP?!'
     }
     
     'and then calling a function with nested requires': {
       topic: (ddoc) -> ddoc.compile('deeply.nestedRequireTest').call()
       
       'should have returned a value from the required library': (retVal) ->
-        assert.equal 'foo bar??!', retVal
+        assert.equal retVal, 'foo bar??!'
     }
     
     'should throw error for missing function path': (ddoc) ->
@@ -67,7 +67,8 @@ vows.describe('CouchDB design doc function executor').addBatch({
       assert.throws causeError, CouchCover.NotAFunctionError
 
     'should be able to pass arguments to function': (ddoc) ->
-      assert.equal 9, ddoc.call 'the.squared', [3]
+      retVal = ddoc.call 'the.squared', [3]
+      assert.equal retVal, 9
       
     'and then compiling and calling a function using sandbox overrides': {
       topic: (ddoc) ->
