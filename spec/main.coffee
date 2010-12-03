@@ -5,6 +5,9 @@ assert = require 'assert'
 CouchCover = require '../src/main'
 fixtureDDocs = require '../fixture/ddocs'
 
+assertReturn = (expected) ->
+  (retVal) -> assert.equal retVal, expected
+
 vows.describe('CouchDB design doc function executor').addBatch({
   
   'after loading a very contrived design doc': {
@@ -13,8 +16,7 @@ vows.describe('CouchDB design doc function executor').addBatch({
     'and then calling a function': {
       topic: (ddoc) -> ddoc.call 'the.answer'
       
-      'should return 42': (retVal) ->
-        assert.equal retVal, 42
+      'should return 42': assertReturn 42
     }
     
     'and then compiling a function': {
@@ -40,22 +42,22 @@ vows.describe('CouchDB design doc function executor').addBatch({
     'and then calling a function using sandboxed require function': {
       topic: (ddoc) -> ddoc.compile('requireTest').call 'GOTYA'
       
-      'should have returned a value from the required library': (retVal) ->
-        assert.equal retVal, 'foo GOTYA!'
+      'should have returned a value from the required library':
+        assertReturn 'foo GOTYA!'
     }
     
     'and then calling a function requiring a module higher in hierarchy': {
       topic: (ddoc) -> ddoc.compile('deeply.nested.requireTest').call()
       
-      'should have returned a value from the required library': (retVal) ->
-        assert.equal retVal, 'foo DEEP?!'
+      'should have returned a value from the required library': 
+        assertReturn 'foo DEEP?!'
     }
     
     'and then calling a function with nested requires': {
       topic: (ddoc) -> ddoc.compile('deeply.nestedRequireTest').call()
       
-      'should have returned a value from the required library': (retVal) ->
-        assert.equal retVal, 'foo bar??!'
+      'should have returned a value from the required library': 
+        assertReturn 'foo bar??!'
     }
     
     'should throw error for missing function path': (ddoc) ->
