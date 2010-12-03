@@ -37,5 +37,15 @@ exports.couchDBFuns = {
     'by-last-name': {
       map: 'function(doc) { emit(doc.last_name, null); }'
     }
+    
+    'by-tags': {
+      map: '''
+        function(doc) {
+          doc.tags.forEach(function(t) {
+            emit(t, null);
+          });
+        }
+      '''
+    }
   }
 }
