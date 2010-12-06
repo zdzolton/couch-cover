@@ -14,6 +14,10 @@ class exports.DesignDoc
     fun = new ViewMapFunction @ddoc, viewName
     retVal = fun.call doc
     { returned: retVal, emitted: fun.emitted }
+  
+  viewReduce: (viewName, opts={}) ->
+    fun = new ViewReduceFunction @ddoc, viewName
+    fun.call opts.keys, opts.values, opts.rereduce
 
 class CouchFunction
   constructor: (@ddoc, @funPath, @overrides={}) ->
@@ -34,6 +38,12 @@ class ViewMapFunction extends CouchFunction
     @emitted = emitted = []
     super @ddoc, "views.#{viewName}.map", {
       emit: (k, v) -> emitted.push { key: k, value: v }
+    }
+
+class ViewReduceFunction extends CouchFunction
+  constructor: (@ddoc, @viewName) -> 
+    super @ddoc, "views.#{viewName}.reduce", {
+      sum: (values) -> values.reduce ((total, n) -> total + n), 0
     }
 
 readPath = (propPath, obj) -> 

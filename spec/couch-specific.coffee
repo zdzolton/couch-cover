@@ -11,6 +11,9 @@ assertEmittedKVCount = (count) ->
 assertEmittedKey = (key) ->
   (result) -> result.emitted.some (kv) -> kv.key is key
 
+assertReturn = (expected) ->
+  (retVal) -> assert.equal retVal, expected
+
 vows.describe('CouchCover.DesignDoc').addBatch({
 
   'load CouchDB function design doc': {
@@ -34,6 +37,15 @@ vows.describe('CouchCover.DesignDoc').addBatch({
       'should emit two key-value pairs': assertEmittedKVCount 2
       'should emit key "rainbows"': assertEmittedKey 'rainbows'
       'should emit key "unicorns"': assertEmittedKey 'unicorns'
+    }
+    
+    'execute view reduce function "by-tags"': {
+      topic: (ddoc) -> ddoc.viewReduce 'by-tags', {
+        keys: ['some', 'numbers', 'to', 'sum']
+        values: [4, 6, 2, 4]
+      }
+      
+      'should have summed values': assertReturn 16
     }
   }
 
