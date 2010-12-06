@@ -13,6 +13,15 @@ assertEmittedKey = (key) ->
 
 assertReturn = (expected) ->
   (retVal) -> assert.equal retVal, expected
+  
+orsonWells = { 
+  first_name: 'Orson'
+  last_name: 'Wells'
+}
+
+blogPost = {
+  tags: ['rainbows', 'unicorns']
+}
 
 vows.describe('CouchCover.DesignDoc').addBatch({
 
@@ -20,30 +29,25 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     topic: -> new CouchCover.DesignDoc fixtureDDocs.couchDBFuns
 
     'execute view map function "by-last-name"': {
-      topic: (ddoc) -> ddoc.viewMap 'by-last-name', { 
-        first_name: 'Orson'
-        last_name: 'Wells'
-      }
+      topic: (ddoc) -> ddoc.viewMap 'by-last-name', [orsonWells]
 
       'should emit one key-value pair': assertEmittedKVCount 1
-      'should emit key "Wells"': assertEmittedKey 'Wells'
+      'should emit key "Wells"': assertEmittedKey orsonWells.last_name
     }
 
     'execute view map function "by-tags"': {
-      topic: (ddoc) -> ddoc.viewMap 'by-tags', {
-        tags: ['rainbows', 'unicorns']
-      }
+      topic: (ddoc) -> ddoc.viewMap 'by-tags', [blogPost]
 
       'should emit two key-value pairs': assertEmittedKVCount 2
-      'should emit key "rainbows"': assertEmittedKey 'rainbows'
-      'should emit key "unicorns"': assertEmittedKey 'unicorns'
+      'should emit key "rainbows"': assertEmittedKey blogPost.tags[0]
+      'should emit key "unicorns"': assertEmittedKey blogPost.tags[1]
     }
     
     'execute view reduce function "by-tags"': {
-      topic: (ddoc) -> ddoc.viewReduce 'by-tags', {
-        keys: ['some', 'numbers', 'to', 'sum']
-        values: [4, 6, 2, 4]
-      }
+      topic: (ddoc) -> ddoc.viewReduce 'by-tags', [
+        ['some', 'numbers', 'to', 'sum']
+        [4, 6, 2, 4]
+      ]
       
       'should have summed values': assertReturn 16
     }

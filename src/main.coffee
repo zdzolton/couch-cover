@@ -10,14 +10,14 @@ class exports.DesignDoc
   call: (funPath, funArgs=[], overrides={}) ->
     @compile(funPath, overrides).call funArgs...
   
-  viewMap: (viewName, doc) ->
+  viewMap: (viewName, funArgs=[]) ->
     fun = new ViewMapFunction @ddoc, viewName
-    retVal = fun.call doc
+    retVal = fun.call funArgs...
     { returned: retVal, emitted: fun.emitted }
   
-  viewReduce: (viewName, opts={}) ->
+  viewReduce: (viewName, funArgs=[]) ->
     fun = new ViewReduceFunction @ddoc, viewName
-    fun.call opts.keys, opts.values, opts.rereduce
+    fun.call funArgs...
 
 class CouchFunction
   constructor: (@ddoc, @funPath, @overrides={}) ->
