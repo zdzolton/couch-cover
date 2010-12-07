@@ -14,7 +14,7 @@ exports.basics = {
     nested: {
       requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
     }
-    nestedRequireTest: 'function() { return require("../lib/alsoRequires").bar(); }'
+    'nested-require-test': 'function() { return require("../lib/alsoRequires").bar(); }'
   }
   
   lib: {

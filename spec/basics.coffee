@@ -56,7 +56,7 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     }
     
     'call a function with nested requires': {
-      topic: ddocCall 'deeply.nestedRequireTest'
+      topic: ddocCall 'deeply.nested-require-test'
       'should return value from argument': assertReturn 'foo bar??!'
     }
     
