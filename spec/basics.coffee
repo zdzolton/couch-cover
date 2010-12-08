@@ -31,7 +31,12 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     
     'call "troubles.wrappedInParens"': {
       topic: ddocCall 'troubles.wrappedInParens'
-      'should return 42': assertReturn 'parens'
+      'should return "parens"': assertReturn 'parens'
+    }
+    
+    'call "troubles.parensAndSemicolon"': {
+      topic: ddocCall 'troubles.parensAndSemicolon'
+      'should return "both"': assertReturn 'both'
     }
     
     'compile "the.answer"': {
