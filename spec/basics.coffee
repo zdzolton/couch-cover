@@ -19,31 +19,26 @@ ddocCall = (funPath, args=[]) ->
       ddoc.call funPath, args
     catch e
 
+callingShouldReturn = (expected, funArgs=[]) ->
+  context = {
+    topic: (ddoc) ->
+      funPath = @context.name
+      ddoc.call funPath, funArgs
+  }
+  context["should return #{inspect expected}"] = assertReturn expected
+  context
+
 vows.describe('CouchCover.DesignDoc').addBatch({
   
   'load basic functionality design doc': {
     topic: -> new CouchCover.DesignDoc fixtureDDocs.basics
 
-    'call "the.answer"': {
-      topic: ddocCall 'the.answer'
-      'should return 42': assertReturn 42
-    }
-    
-    'call "troubles.wrappedInParens"': {
-      topic: ddocCall 'troubles.wrappedInParens'
-      'should return "parens"': assertReturn 'parens'
-    }
-    
-    'call "troubles.parensAndSemicolon"': {
-      topic: ddocCall 'troubles.parensAndSemicolon'
-      'should return "both"': assertReturn 'both'
-    }
-    
-    'call "troubles.justSemicolon"': {
-      topic: ddocCall 'troubles.justSemicolon'
-      'should return "semicolon"': assertReturn 'semicolon'
-    }
-    
+    'the.answer': callingShouldReturn 42
+    'troubles.wrappedInParens': callingShouldReturn 'parens'
+    'troubles.parensAndSemicolon': callingShouldReturn 'both'
+    'troubles.justSemicolon': callingShouldReturn 'semicolon'    
+    'the.squared': callingShouldReturn 9, [3]
+
     'compile "the.answer"': {
       topic: (ddoc) -> ddoc.compile 'the.answer'
       'should be able to invoke': (fun) -> assert.equal fun.call(), 42
@@ -81,10 +76,6 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     'should throw error for non-function path': 
       assertCompilingThrows 'nonFunction', CouchCover.NotAFunctionError
 
-    'should be able to pass arguments to function': (ddoc) ->
-      retVal = ddoc.call 'the.squared', [3]
-      assert.equal retVal, 9
-      
     'compile then call a function using overriden log()': {
       topic: (ddoc) ->
         logWasCalled = false
