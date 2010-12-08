@@ -86,16 +86,21 @@ makeRequireFun = (refStack) ->
     sandbox.exports
 
 findModule = (moduleID, refStack) ->
+  code = null
+  nextRefStack = if /^\.\.?\//.test moduleID
+    refStack.slice()
+  else
+    refStack.slice 0, 1
   for part in moduleID.split '/'
     if part is '..'
-      refStack.pop()
+      nextRefStack.pop() if nextRefStack.length > 1
     else if part isnt '.'
-      current = refStack[refStack.length - 1]
+      current = nextRefStack[nextRefStack.length - 1]
       next =  current[part]
       throw "Couldn't find part '#{part}' of '#{moduleID}'" unless next?
-      refStack.push next
-  code = refStack.pop()
-  [refStack, code]
+      nextRefStack.push next
+  code = nextRefStack.pop()
+  [nextRefStack, code]
 
 class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->

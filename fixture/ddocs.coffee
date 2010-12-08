@@ -12,7 +12,7 @@ exports.basics = {
   
   deeply: { 
     nested: {
-      requireTest: 'function() { return require("../../lib/simple").foo("DEEP?"); }'
+      requireTest: 'function() { return require("lib/simple").foo("DEEP?"); }'
     }
     'nested-require-test': 'function() { return require("../lib/alsoRequires").bar(); }'
   }
@@ -36,7 +36,7 @@ exports.basics = {
       };
     '''
     alsoRequires: '''
-      var simple = require('simple');
+      var simple = require('./simple');
       exports.bar = function() {
         return simple.foo('bar??')
       };
