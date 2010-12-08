@@ -82,7 +82,7 @@ makeRequireFun = (refStack) ->
       sandbox.require = makeRequireFun nextRefStack
       runInNewContext code, sandbox, moduleID
     catch e
-      throw "Design doc require() error: #{e.message}"
+      throw "Design doc require() error: #{e}"
     sandbox.exports
 
 findModule = (moduleID, refStack) ->
@@ -92,7 +92,7 @@ findModule = (moduleID, refStack) ->
     else if part isnt '.'
       current = refStack[refStack.length - 1]
       next =  current[part]
-      throw "Couldn't find part: #{part}" moduleID unless next?
+      throw "Couldn't find part '#{part}' of '#{moduleID}'" unless next?
       refStack.push next
   code = refStack.pop()
   [refStack, code]
