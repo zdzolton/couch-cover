@@ -61,14 +61,14 @@ normalizeFunctionDefinition = (code) ->
 createSandbox = (couchFun) ->
   sb = {
     log: (msg) -> couchFun.log.push msg
-    require: makeRequireFun makeInitialRefStack couchFun
+    require: makeRequireFun makeRefStack couchFun.ddoc, couchFun.funPath
   }
   sb[name] = fun for name, fun of couchFun.overrides
   sb
 
-makeInitialRefStack = (couchFun) ->
-  stack = [couchFun.ddoc]
-  couchFun.funPath.split('.').forEach (prop) ->
+makeRefStack = (ddoc, funPath) ->
+  stack = [ddoc]
+  funPath.split('.').forEach (prop) ->
     currObj = stack[stack.length - 1]
     stack.push currObj[prop]
   stack.pop()
