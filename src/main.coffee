@@ -23,7 +23,7 @@ class CouchFunction
   constructor: (@ddoc, @funPath, @overrides={}) ->
     @log = []
     @fileName = "#{@ddoc._id}/#{@funPath}.js"
-    code = "(#{readPath @funPath, @ddoc});"
+    code = normalizeFunctionDefinition readPath @funPath, @ddoc
     sandbox = createSandbox @
     try
       @fun = runInNewContext code, sandbox, @fileName
@@ -53,6 +53,10 @@ readPath = (propPath, obj) ->
     else
       throw new MissingPropPathError propPath, obj
   propPath.split('.').reduce getSubObject, obj
+  
+normalizeFunctionDefinition = (code) ->
+  withoutSemicolon = code.replace /;$/, ''
+  "(#{withoutSemicolon});"
 
 createSandbox = (couchFun) ->
   sb = {

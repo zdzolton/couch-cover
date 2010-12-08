@@ -39,6 +39,11 @@ vows.describe('CouchCover.DesignDoc').addBatch({
       'should return "both"': assertReturn 'both'
     }
     
+    'call "troubles.justSemicolon"': {
+      topic: ddocCall 'troubles.justSemicolon'
+      'should return "semicolon"': assertReturn 'semicolon'
+    }
+    
     'compile "the.answer"': {
       topic: (ddoc) -> ddoc.compile 'the.answer'
       'should be able to invoke': (fun) -> assert.equal fun.call(), 42
