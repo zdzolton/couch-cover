@@ -25,8 +25,13 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     topic: -> new CouchCover.DesignDoc fixtureDDocs.basics
 
     'call "the.answer"': {
-      topic: -> ddocCall 'the.answer'
-      'should return 42': -> assertReturn 42
+      topic: ddocCall 'the.answer'
+      'should return 42': assertReturn 42
+    }
+    
+    'call "troubles.wrappedInParens"': {
+      topic: ddocCall 'troubles.wrappedInParens'
+      'should return 42': assertReturn 'parens'
     }
     
     'compile "the.answer"': {

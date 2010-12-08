@@ -17,6 +17,18 @@ exports.basics = {
     'nested-require-test': 'function() { return require("../lib/alsoRequires").bar(); }'
   }
   
+  troubles: {
+    wrappedInParens: '''
+      (function() { return 'parens'; })
+    '''
+    parensAndSemicolon: '''
+      (function() { return 'both'; });
+    '''
+    justSemicolon: '''
+      function() { return 'semicolon'; };
+    '''
+  }
+  
   lib: {
     simple: '''
       exports.foo = function(s) {
