@@ -7,7 +7,7 @@
   "licenses": [{ "type": "MIT" }],
   "main": "./lib/main",
   "engines": { "node": ">= 0.2.4", "coffee-script": ">=0.9.4" },
-  "scripts" : { "test": "make test" },
+  "scripts" : { "test": "make --silent test" },
   "repositories": [
     { "type": "git", "url": "https://github.com/zdzolton/couch-cover.git" }
   ]
