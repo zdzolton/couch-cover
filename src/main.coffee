@@ -16,8 +16,10 @@ class exports.DesignDoc
     { returned: retVal, emitted: fun.emitted }
   
   viewReduce: (viewName, funArgs=[]) ->
-    fun = new ViewReduceFunction @ddoc, viewName
-    fun.call funArgs...
+    (new ViewReduceFunction @ddoc, viewName).call funArgs...
+  
+  update: (updateName, funArgs=[]) ->
+    (new UpdateFunction @ddoc, updateName).call funArgs...
   
   require: (moduleID) ->
     modulePath = moduleID.replace '/', '.'
@@ -108,6 +110,10 @@ class ViewReduceFunction extends CouchFunction
     super @ddoc, "views.#{viewName}.reduce", {
       sum: (values) -> values.reduce ((total, n) -> total + n), 0
     }
+
+class UpdateFunction extends CouchFunction
+  constructor: (@ddoc, @updateName) -> 
+    super @ddoc, "updates.#{updateName}"
 
 class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->

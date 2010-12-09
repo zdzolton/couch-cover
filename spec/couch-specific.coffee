@@ -51,6 +51,15 @@ vows.describe('CouchCover.DesignDoc').addBatch({
       
       'should have summed values': assertReturn 16
     }
+    
+    'execute update function "set-timestamp"': {
+      topic: (ddoc) ->
+        ddoc.update 'set-timestamp', [{ foo: 'bar'}, { what: 'ever'}]
+      
+      'should return timestamped doc': (retVal) ->
+        assert.equal retVal[0].timestamp, '2010-10-10 14:45:52'
+        assert.equal retVal[0].foo, 'bar'
+    }
   }
 
 }).export module

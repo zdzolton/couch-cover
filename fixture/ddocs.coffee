@@ -59,9 +59,15 @@ exports.couchDBFuns = {
         }
       '''
       
-      reduce: '''
-        function(keys, values) { return sum(values); }
-      '''
+      reduce: 'function(keys, values) { return sum(values); }'
     }
+  }
+  updates: {
+    'set-timestamp': '''
+      function(doc, req) {
+        doc.timestamp = '2010-10-10 14:45:52';
+        return [doc, "ok"];
+      }
+    '''
   }
 }
