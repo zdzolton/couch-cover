@@ -40,19 +40,6 @@ class CouchFunction
   
   call: (funArgs...) -> @fun.apply null, funArgs
 
-class ViewMapFunction extends CouchFunction
-  constructor: (@ddoc, @viewName) ->
-    @emitted = emitted = []
-    super @ddoc, "views.#{viewName}.map", {
-      emit: (k, v) -> emitted.push { key: k, value: v }
-    }
-
-class ViewReduceFunction extends CouchFunction
-  constructor: (@ddoc, @viewName) -> 
-    super @ddoc, "views.#{viewName}.reduce", {
-      sum: (values) -> values.reduce ((total, n) -> total + n), 0
-    }
-
 readPath = (propPath, obj) -> 
   getSubObject = (o, prop) ->
     if typeof o is 'object' and prop of o
@@ -108,6 +95,19 @@ findModule = (moduleID, refStack) ->
       nextRefStack.push next
   code = nextRefStack.pop()
   [nextRefStack, code]
+
+class ViewMapFunction extends CouchFunction
+  constructor: (@ddoc, @viewName) ->
+    @emitted = emitted = []
+    super @ddoc, "views.#{viewName}.map", {
+      emit: (k, v) -> emitted.push { key: k, value: v }
+    }
+
+class ViewReduceFunction extends CouchFunction
+  constructor: (@ddoc, @viewName) -> 
+    super @ddoc, "views.#{viewName}.reduce", {
+      sum: (values) -> values.reduce ((total, n) -> total + n), 0
+    }
 
 class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->
