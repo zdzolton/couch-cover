@@ -24,7 +24,7 @@ class CouchFunction
     @log = []
     @fileName = "#{@ddoc._id}/#{@funPath}.js"
     code = normalizeFunctionDefinition readPath @funPath, @ddoc
-    sandbox = createSandbox @
+    sandbox = createSandbox @ddoc, @funPath, @log, @overrides
     try
       @fun = runInNewContext code, sandbox, @fileName
     catch e
@@ -58,12 +58,12 @@ normalizeFunctionDefinition = (code) ->
   withoutSemicolon = code.replace /;$/, ''
   "(#{withoutSemicolon});"
 
-createSandbox = (couchFun) ->
+createSandbox = (ddoc, propPath, logEntries, overrides) ->
   sb = {
-    log: (msg) -> couchFun.log.push msg
-    require: makeRequireFun makeRefStack couchFun.ddoc, couchFun.funPath
+    log: (msg) -> logEntries.push msg
+    require: makeRequireFun makeRefStack ddoc, propPath
   }
-  sb[name] = fun for name, fun of couchFun.overrides
+  sb[name] = fun for name, fun of overrides
   sb
 
 makeRefStack = (ddoc, funPath) ->
