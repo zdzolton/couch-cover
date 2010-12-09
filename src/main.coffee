@@ -18,6 +18,13 @@ class exports.DesignDoc
   viewReduce: (viewName, funArgs=[]) ->
     fun = new ViewReduceFunction @ddoc, viewName
     fun.call funArgs...
+  
+  require: (moduleID) ->
+    modulePath = moduleID.replace '/', '.'
+    code = readPath modulePath, @ddoc
+    sandbox = createSandbox @ddoc, modulePath, [], { exports: {} }
+    runInNewContext code, sandbox, "#{@ddoc._id}/#{moduleID}"
+    sandbox.exports
 
 class CouchFunction
   constructor: (@ddoc, @funPath, @overrides={}) ->

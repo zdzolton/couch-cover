@@ -38,6 +38,13 @@ vows.describe('CouchCover.DesignDoc').addBatch({
     'troubles.parensAndSemicolon': callingShouldReturn 'both'
     'troubles.justSemicolon': callingShouldReturn 'semicolon'    
     'the.squared': callingShouldReturn 9, [3]
+    
+    'require "lib.alsoRequires"': {
+      topic: (ddoc) -> ddoc.require 'lib/alsoRequires'
+      
+      'should be able to invoke bar()': (mod) ->
+        assert.equal mod.bar(), 'foo bar??!'
+    }
 
     'compile "the.answer"': {
       topic: (ddoc) -> ddoc.compile 'the.answer'
