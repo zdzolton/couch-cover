@@ -57,9 +57,9 @@ vows.describe('CouchCover.DesignDoc').addBatch({
       'calling should log messages': (fun) ->
         assert.isEmpty fun.log
         fun.call()
-        assert.equal fun?.log?.length, 1
+        assert.length fun.log, 1
         fun.call(); fun.call()
-        assert.equal fun?.log?.length, 3
+        assert.length fun.log, 3
     }
     
     'call a function using sandboxed require function': {
