@@ -41,6 +41,8 @@ TODOs
 =====
 
 * Show usage of require() and log() functions from ddoc code
-* CouchFunction subtypes for View, List, Show, Update and Filter functions
-* Sandbox overrides
+* CouchFunction subtypes for List, Show, Validation and Filter functions
 * API documentation 
+* Ensure that show, list, update and validation functions cannot call
+  require() with a relative path
+* Ensure that view map/reduce functions cannot call require whatsoever
