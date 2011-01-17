@@ -69,6 +69,12 @@ exports.couchDBFuns = {
         return [doc, "ok"];
       }
     '''
+    
+    'use-id': '''
+      function (doc, req) {
+        return [{_id: req.id}, 'what ever'];
+      }
+    '''
   }
   filters: {
     'has-foo': '''

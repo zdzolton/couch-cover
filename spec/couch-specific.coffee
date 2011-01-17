@@ -53,6 +53,10 @@ vows.describe('CouchCover.DesignDoc').addBatch(
       'should return timestamped doc': (retVal) ->
         assert.equal retVal[0].timestamp, '2010-10-10 14:45:52'
         assert.equal retVal[0].foo, 'bar'
+    
+    'update "use-id" with a docid':
+      topic: (ddoc) -> ddoc.update 'use-id', 'ABC123', []
+      'should return': (retVal) -> assert.equal retVal[0]._id, 'ABC123'
 
     'filter "has-foo"':
       topic: (ddoc) -> ddoc.filter 'has-foo', [{ foo: 16 }, null]

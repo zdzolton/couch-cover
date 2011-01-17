@@ -18,8 +18,14 @@ class exports.DesignDoc
   viewReduce: (viewName, funArgs=[]) ->
     (new ViewReduceFunction @ddoc, viewName).call funArgs...
   
-  update: (updateName, funArgs=[]) ->
-    (new UpdateFunction @ddoc, updateName).call funArgs...
+  update: (updateName, args...) ->
+    if args.length is 1
+      updateFun = new UpdateFunction @ddoc, updateName
+      funArgs = args[0]
+    else
+      updateFun = new UpdateFunction @ddoc, updateName, args[0]
+      funArgs = args[1]
+    updateFun.call funArgs...
   
   filter: (filterName, funArgs=[]) ->
     (new FilterFunction @ddoc, filterName).call funArgs...
@@ -112,8 +118,12 @@ class ViewReduceFunction extends CouchFunction
       sum: (values) -> values.reduce ((total, n) -> total + n), 0
 
 class UpdateFunction extends CouchFunction
-  constructor: (@ddoc, @updateName) -> 
+  constructor: (@ddoc, @updateName, @docID) -> 
     super @ddoc, "updates.#{updateName}"
+  
+  call: (doc={}, req={}) ->
+    req.id = @docID if @docID?
+    super doc, req
 
 class FilterFunction extends CouchFunction
   constructor: (@ddoc, @updateName) -> 
