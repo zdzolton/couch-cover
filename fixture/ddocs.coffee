@@ -70,4 +70,11 @@ exports.couchDBFuns = {
       }
     '''
   }
+  filters: {
+    'has-foo': '''
+      function (doc, req) {
+        return doc.foo && doc.foo !== null;
+      }
+    '''
+  }
 }

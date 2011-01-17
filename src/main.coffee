@@ -21,6 +21,9 @@ class exports.DesignDoc
   update: (updateName, funArgs=[]) ->
     (new UpdateFunction @ddoc, updateName).call funArgs...
   
+  filter: (filterName, funArgs=[]) ->
+    (new FilterFunction @ddoc, filterName).call funArgs...
+  
   require: (moduleID) ->
     modulePath = moduleID.replace '/', '.'
     code = readPath modulePath, @ddoc
@@ -55,10 +58,9 @@ normalizeFunctionDefinition = (code) ->
   "(#{withoutSemicolon});"
 
 createSandbox = (ddoc, propPath, logEntries, overrides) ->
-  sb = {
+  sb =
     log: (msg) -> logEntries.push msg
     require: makeRequireFun makeRefStack ddoc, propPath
-  }
   sb[name] = fun for name, fun of overrides
   sb
 
@@ -72,7 +74,7 @@ makeRefStack = (ddoc, funPath) ->
 
 makeRequireFun = (refStack) ->
   (moduleID) ->
-    sandbox = { exports: {} }
+    sandbox = exports: {}
     try
       [nextRefStack, code] = findModule moduleID, refStack
       sandbox.require = makeRequireFun nextRefStack
@@ -101,19 +103,21 @@ findModule = (moduleID, refStack) ->
 class ViewMapFunction extends CouchFunction
   constructor: (@ddoc, @viewName) ->
     @emitted = emitted = []
-    super @ddoc, "views.#{viewName}.map", {
-      emit: (k, v) -> emitted.push { key: k, value: v }
-    }
+    super @ddoc, "views.#{viewName}.map",
+      emit: (k, v) -> emitted.push key: k, value: v
 
 class ViewReduceFunction extends CouchFunction
   constructor: (@ddoc, @viewName) -> 
-    super @ddoc, "views.#{viewName}.reduce", {
+    super @ddoc, "views.#{viewName}.reduce",
       sum: (values) -> values.reduce ((total, n) -> total + n), 0
-    }
 
 class UpdateFunction extends CouchFunction
   constructor: (@ddoc, @updateName) -> 
     super @ddoc, "updates.#{updateName}"
+
+class FilterFunction extends CouchFunction
+  constructor: (@ddoc, @updateName) -> 
+    super @ddoc, "filters.#{updateName}"
 
 class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->
