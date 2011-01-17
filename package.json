@@ -1,14 +1,39 @@
 {
   "name": "CouchCover",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Provides a mock evironment for testing CouchDB design document functions",
-  "keywords": ["CouchDB", "mock", "testing"],
+  "keywords": [
+    "CouchDB",
+    "mock",
+    "testing"
+  ],
   "author": "Zachary Zolton <zachary.zolton@gmail.com>",
-  "licenses": [{ "type": "MIT" }],
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
   "main": "./lib/main",
-  "engines": { "node": ">= 0.2.4", "coffee-script": ">=0.9.4" },
-  "scripts" : { "test": "make --silent test" },
+  "engines": {
+    "node": ">= 0.2.4",
+    "coffee-script": ">=0.9.4"
+  },
+  "scripts": {
+    "test": "make --silent test"
+  },
   "repositories": [
-    { "type": "git", "url": "https://github.com/zdzolton/couch-cover.git" }
+    {
+      "type": "git",
+      "url": "https://github.com/zdzolton/couch-cover.git"
+    }
+  ],
+  "directories": {
+    "lib": "./lib"
+  },
+  "modules": {
+    "main.js": "lib/main.js"
+  },
+  "files": [
+    ""
   ]
 }
