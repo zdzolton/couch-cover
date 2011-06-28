@@ -6,4 +6,4 @@ clean:
 	mkdir lib
 
 test: build
-	vows
+	vows ./spec/*.coffee
