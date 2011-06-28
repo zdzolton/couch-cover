@@ -43,9 +43,7 @@ class CouchFunction
     @fileName = "#{@ddoc._id}/#{@funPath}.js"
     code = normalizeFunctionDefinition readPath @funPath, @ddoc
     sandbox = createSandbox @ddoc, @funPath, @log, @overrides
-    try
-      @fun = runInNewContext code, sandbox, @fileName
-    catch e
+    @fun = try runInNewContext code, sandbox, @fileName catch e
     unless typeof @fun is 'function'
       throw new NotAFunctionError @funPath, @ddoc
   
@@ -53,10 +51,8 @@ class CouchFunction
 
 readPath = (propPath, obj) -> 
   getSubObject = (o, prop) ->
-    if typeof o is 'object' and prop of o
-      o[prop]
-    else
-      throw new MissingPropPathError propPath, obj
+    if typeof o is 'object' and prop of o then o[prop]
+    else throw new MissingPropPathError propPath, obj
   propPath.split('.').reduce getSubObject, obj
   
 normalizeFunctionDefinition = (code) ->
@@ -129,10 +125,10 @@ class FilterFunction extends CouchFunction
   constructor: (@ddoc, @updateName) -> 
     super @ddoc, "filters.#{updateName}"
 
-class exports.MissingPropPathError extends Error
+MissingPropPathError = class exports.MissingPropPathError extends Error
   constructor: (@funPath, @ddoc) ->
-    @message = "Property path '#{funPath}' not found in design doc '#{@ddoc._id}'"
+    @message = "Property path '#{funPath}' not found in design doc '#{@ddoc?._id}'"
 
-class exports.NotAFunctionError extends Error
+NotAFunctionError = class exports.NotAFunctionError extends Error
   constructor: (@funPath, @ddoc) ->
-    @message = "Property path '#{funPath}' in design doc '#{@ddoc._id}' does not evaluate to a function"
+    @message = "Property path '#{funPath}' in design doc '#{@ddoc?._id}' does not evaluate to a function"
