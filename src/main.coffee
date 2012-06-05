@@ -1,5 +1,5 @@
-{runInNewContext} = process.binding('evals').Script
-{puts, inspect} = require 'sys'
+{runInNewContext} = require 'vm'
+{puts, inspect} = require 'util'
 
 class exports.DesignDoc
   constructor: (@ddoc) ->
