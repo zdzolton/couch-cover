@@ -1,4 +1,4 @@
-{runInNewContext} = process.binding('evals').Script
+{runInNewContext} = require 'vm'
 {puts, inspect} = require 'sys'
 
 class exports.DesignDoc
