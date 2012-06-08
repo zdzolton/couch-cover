@@ -52,9 +52,9 @@ vows.describe('CouchCover.DesignDoc')
         'calling should log messages': (fun) ->
           assert.isEmpty fun.log
           fun.call()
-          assert.length fun.log, 1
+          assert.lengthOf fun.log, 1
           fun.call(); fun.call()
-          assert.length fun.log, 3
+          assert.lengthOf fun.log, 3
     
       'call a function using sandboxed require function':
         topic: ddocCall('requireTest', ['GOTYA'])

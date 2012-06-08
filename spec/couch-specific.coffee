@@ -6,7 +6,7 @@ CouchCover = require '../src/main'
 fixtureDDocs = require '../fixture/ddocs'
 
 assertEmittedKVCount = (count) ->
-  (result) -> assert.length result.emitted, count
+  (result) -> assert.lengthOf result.emitted, count
 
 assertEmittedKey = (key) ->
   (result) -> result.emitted.some (kv) -> kv.key is key
