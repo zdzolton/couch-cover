@@ -1,5 +1,5 @@
 {runInNewContext} = require 'vm'
-{puts, inspect} = require 'util'
+{puts, inspect}   = require 'util'
 
 class exports.DesignDoc
   constructor: (@ddoc) ->
